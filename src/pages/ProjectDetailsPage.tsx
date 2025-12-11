@@ -8,7 +8,6 @@ function ProjectDetailsPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
   const { projectId } = useParams();
 
   useEffect(() => {
@@ -41,7 +40,7 @@ function ProjectDetailsPage() {
     <div className="text-white p-8">
       <h1 className="text-3xl mb-4">{project?.name}</h1>
       <p className="mb-8">{project?.description}</p>
-
+      
       <h2 className="text-2xl mb-4">Add Task</h2>
       <form onSubmit={handleCreateTask} className="mb-8 flex flex-col gap-2 max-w-md">
         <input
