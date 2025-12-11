@@ -1,24 +1,62 @@
-import { Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import ProjectsPage from "./pages/ProjectsPage";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthProvider, { AuthContext } from "./context/AuthProvider";
 import Navbar from "./components/Navbar";
-import ProjectDetailsPage from "./pages/ProjectDetailsPage";
+import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage";
+import "./App.css";
 
+// Protected Route wrapper component
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const authContext = useContext(AuthContext);
+
+  if (!authContext?.user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function AppContent() {
+  return (
+    <div className="min-h-screen bg-gray-900">
+      <Navbar />
+      <main className="container mx-auto">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route
+            path="/projects"
+            element={
+              <ProtectedRoute>
+                <ProjectsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:projectId"
+            element={
+              <ProtectedRoute>
+                <ProjectDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <>
-      <div className="p-5 bg-zinc-900 h-screen">
-      <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />}/>
-          <Route path="/projects" element={<ProjectsPage />}/>
-          <Route path="/projects/:projectId" element={<ProjectDetailsPage />}/>
-          <Route path="/auth" element={<AuthPage />}/>
-        </Routes>
-      </div>
-    </>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
