@@ -2,15 +2,6 @@ import axios from "axios";
 
 // Try to get the authentication token from browser's localStorage when the app loads
 // This allows users to stay logged in even after refreshing the page
-let token: string | null = null;
-try {
-  const value = localStorage.getItem("token");
-  if (value) {
-    token = JSON.parse(value); // Parse the stored JSON string back into a token
-  }
-} catch (error) {
-  console.error(error);
-}
 
 // Create an axios instance for making API calls to our backend
 // This is the main tool we use to communicate with the Express server
